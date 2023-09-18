@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -68,7 +69,7 @@ fun AnnouncementScreen(id: Int, navController: NavController) {
             }
 
             Text(
-                text = "Novo comunicado",
+                text = stringResource(id = R.string.new_statement),
                 fontSize = 16.sp,
                 fontWeight = FontWeight(700),
                 color = Color(0xFF252525),
@@ -105,14 +106,14 @@ fun AnnouncementScreen(id: Int, navController: NavController) {
                 modifier = Modifier
                     .width(50.dp)
                     .height(50.dp),
-                painter = painterResource(id = R.drawable.person),
+                painter = painterResource(getAnnouncementByIdState.value!!.imageUser),
                 contentDescription = "Imagem da pessoa que envio o comunicado",
                 contentScale = ContentScale.FillBounds
             )
 
             Column() {
                 Text(
-                    text = "Sarah Connor, dir.",
+                    text = getAnnouncementByIdState.value!!.userName,
                     fontSize = 20.sp,
                     fontFamily = RobotoRegular,
                     color = Color(0xFF252525),

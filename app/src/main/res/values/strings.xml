@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Hello</string>
+    <string name="login">Login</string>
+    <string name="welcome">Bem-vindo, Insira seu e-mail</string>
+    <string name="sub_welcome">A gente jura que não vai te incomodar</string>
+    <string name="advance">Avançar</string>
+    <string name="invalid_email">Por favor, insira um email válido</string>
+    <string name="to_enter">Entrar</string>
+    <string name="outlined_text_field_email_label">school@hello.com.br</string>
+    <string name="list_of_announcements">Lista de comunicados</string>
+    <string name="new_statement">Novo comunicado</string>
 </resources>

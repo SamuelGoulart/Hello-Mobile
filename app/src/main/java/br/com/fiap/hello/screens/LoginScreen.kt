@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -86,7 +87,7 @@ fun LoginScreen(navaController: NavController) {
             }
 
             Text(
-                text = "Entrar",
+                text = stringResource(id = R.string.to_enter),
                 fontSize = 16.sp,
                 fontWeight = FontWeight(700),
                 fontFamily = RobotoBold,
@@ -119,7 +120,7 @@ fun LoginScreen(navaController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                text = "A gente jura que não vai te incomodar",
+                text = stringResource(id = R.string.sub_welcome),
                 fontSize = 20.sp,
                 fontFamily = RobotoRegular,
                 fontWeight = FontWeight(400),
@@ -141,7 +142,7 @@ fun LoginScreen(navaController: NavController) {
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
                     label = {
                         Text(
-                            text = "school@hello.com.br",
+                            text = stringResource(id = R.string.outlined_text_field_email_label),
                             color = Color(0xffa9abad),
                             fontFamily = RobotoRegular,
                             fontSize = 14.sp
@@ -156,7 +157,7 @@ fun LoginScreen(navaController: NavController) {
 
                 if (!isEmailValid) {
                     Text(
-                        text = "Por favor, insira um email válido",
+                        text = stringResource(id = R.string.invalid_email),
                         color = Color.Red
                     )
                 }
@@ -189,7 +190,7 @@ fun LoginScreen(navaController: NavController) {
             }
         ) {
             Text(
-                text = "Avançar",
+                text = stringResource(id = R.string.advance),
                 fontSize = 24.sp,
                 fontFamily = RobotoBold,
                 fontWeight = FontWeight(700),

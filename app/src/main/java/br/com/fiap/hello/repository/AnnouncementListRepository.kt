@@ -8,6 +8,8 @@ fun getAllAnnouncementList(): List<Announcement> {
         Announcement(
             id = 1,
             image = R.drawable.person_blue,
+            userName = "Sarah Connor, dir.",
+            imageUser = R.drawable.person,
             date = "18/03",
             displayNumber = 23,
             title = "Fique por dentro das atividades do seu filho aqui na escola ☺️",
@@ -21,6 +23,8 @@ fun getAllAnnouncementList(): List<Announcement> {
             id = 2,
             image = R.drawable.person_blue,
             date = "20/03",
+            userName = "Sarah Connor, dir.",
+            imageUser = R.drawable.person,
             displayNumber = 52,
             title = "Avaliação mensal dos alunos. Não esqueça de conferir! ✍\uD83C\uDFFC️",
             time = "18:00",
