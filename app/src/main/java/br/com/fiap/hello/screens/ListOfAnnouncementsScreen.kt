@@ -1,21 +1,13 @@
 package br.com.fiap.hello.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,15 +20,39 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.hello.R
 import br.com.fiap.hello.components.CardAnnouncementComponent
-import br.com.fiap.hello.model.Announcement
-import br.com.fiap.hello.repository.getAllAnnouncementList
+import br.com.fiap.hello.model.Announcements
+import br.com.fiap.hello.service.RetrofitFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun ListOfAnnouncementsScreen(navController: NavController) {
-
-    var listaAnnouncementState = remember {
-        mutableStateOf(getAllAnnouncementList())
+    var listaAnnouncementState by remember {
+        mutableStateOf<Announcements?>(null)
     }
+
+    var call = RetrofitFactory().announcementService().getAllAnnouncement()
+
+    call.enqueue(object : Callback<Announcements> {
+        override fun onResponse(
+            call: Call<Announcements>,
+            response: Response<Announcements>
+        ) {
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    listaAnnouncementState = responseBody
+                }
+            } else {
+                Log.e("FIAP", "Unsuccessful response: ${response.code()}")
+            }
+        }
+
+        override fun onFailure(call: Call<Announcements>, t: Throwable) {
+            Log.e("FIAP", "onFailure: ${t.message}")
+        }
+    })
 
     Column(
         modifier = Modifier
@@ -89,30 +105,33 @@ fun ListOfAnnouncementsScreen(navController: NavController) {
             }
         }
 
-        AnnouncementList(listaAnnouncementState, navController)
-
+        if (listaAnnouncementState?.payload != null) {
+            Log.e("FIAP", "$listaAnnouncementState")
+            AnnouncementList(listaAnnouncementState!!.payload, navController)
+        } else {
+            // TODO: Adicione lógica para lidar com o estado nulo ou payload nulo
+        }
     }
 }
 
 @Composable
 fun AnnouncementList(
-    listAnnouncements: MutableState<List<Announcement>>,
+    listAnnouncements: List<Announcements.Payload>,
     navController: NavController
 ) {
     Column(
         modifier = Modifier
             .padding(top = 30.dp)
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
-        for (announcement in listAnnouncements.value) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        for (announcement in listAnnouncements) {
             CardAnnouncementComponent(
-                id = announcement.id,
+                id = announcement.announcementId,
                 listingTitle = announcement.listingTitle,
                 displayNumber = announcement.displayNumber,
                 date = announcement.date,
-                image = announcement.image,
+                image = R.drawable.person_blue,
                 navController = navController,
             )
         }

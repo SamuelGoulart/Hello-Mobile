@@ -5,8 +5,11 @@
     <string name="sub_welcome">A gente jura que não vai te incomodar</string>
     <string name="advance">Avançar</string>
     <string name="invalid_email">Por favor, insira um email válido</string>
+    <string name="invalid_email_and_or_password">Email e/ou senha inválido</string>
+    <string name="invalid_password">Por favor, insira um senha válido</string>
     <string name="to_enter">Entrar</string>
     <string name="outlined_text_field_email_label">school@hello.com.br</string>
+    <string name="outlined_text_field_password_label">******</string>
     <string name="list_of_announcements">Lista de comunicados</string>
     <string name="new_statement">Novo comunicado</string>
 </resources>

@@ -17,11 +17,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,15 +34,47 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import br.com.fiap.hello.R
-import br.com.fiap.hello.repository.getAnnouncementById
+import br.com.fiap.hello.model.Announcement
+import br.com.fiap.hello.service.RetrofitFactory
 import br.com.fiap.hello.ui.theme.RobotoBold
 import br.com.fiap.hello.ui.theme.RobotoRegular
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun AnnouncementScreen(id: Int, navController: NavController) {
-    val getAnnouncementByIdState = remember {
-        mutableStateOf(getAnnouncementById(id = id))
+    var getAnnouncementByIdState by remember {
+        mutableStateOf(Announcement())
     }
+
+    var call = RetrofitFactory().announcementService().getAnnouncementById( announcementId = id )
+
+    call.enqueue(object : Callback<Announcement> {
+        override fun onResponse(
+            call: Call<Announcement>,
+            response: Response<Announcement>
+        ) {
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    Log.e("FIAP - TESTE", "${responseBody}")
+
+                    getAnnouncementByIdState = responseBody
+
+                }
+            } else {
+                Log.e("FIAP", "Unsuccessful response: ${response.code()}")
+            }
+        }
+
+        override fun onFailure(call: Call<Announcement>, t: Throwable) {
+            Log.e("FIAP", "onFailure: ${t.message}")
+        }
+    })
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -106,20 +141,20 @@ fun AnnouncementScreen(id: Int, navController: NavController) {
                 modifier = Modifier
                     .width(50.dp)
                     .height(50.dp),
-                painter = painterResource(getAnnouncementByIdState.value!!.imageUser),
+                painter = painterResource(R.drawable.person),
                 contentDescription = "Imagem da pessoa que envio o comunicado",
                 contentScale = ContentScale.FillBounds
             )
 
             Column() {
                 Text(
-                    text = getAnnouncementByIdState.value!!.userName,
+                    text = getAnnouncementByIdState.payload?.userName.orEmpty(),
                     fontSize = 20.sp,
                     fontFamily = RobotoRegular,
                     color = Color(0xFF252525),
                 )
                 Text(
-                    text = "Para: ${getAnnouncementByIdState.value!!.category}",
+                    text = "Para: ${getAnnouncementByIdState.payload?.category.orEmpty()}",
                     fontSize = 17.sp,
                     fontFamily = RobotoRegular,
                     color = Color(0xFFA9ABAD),
@@ -127,7 +162,7 @@ fun AnnouncementScreen(id: Int, navController: NavController) {
             }
 
             Text(
-                text = getAnnouncementByIdState.value!!.time.toString(),
+                text = getAnnouncementByIdState.payload?.time.orEmpty(),
                 fontSize = 17.sp,
                 fontFamily = RobotoRegular,
                 color = Color(0xFFA9ABAD),
@@ -163,17 +198,17 @@ fun AnnouncementScreen(id: Int, navController: NavController) {
             Text(
                 modifier = Modifier
                     .width(340.dp),
-                text = getAnnouncementByIdState.value!!.title,
+                text = getAnnouncementByIdState.payload?.title.orEmpty(),
                 fontSize = 22.sp,
                 fontFamily = RobotoBold,
                 color = Color(0xFF252525),
             )
 
-            if (getAnnouncementByIdState.value!!.description !== null) {
+            if (getAnnouncementByIdState.payload?.description !== null) {
                 Text(
                     modifier = Modifier
                         .width(340.dp),
-                    text = getAnnouncementByIdState.value!!.description.toString(),
+                    text = getAnnouncementByIdState.payload!!.description.toString(),
                     fontSize = 16.sp,
                     lineHeight = 22.sp,
                     fontFamily = RobotoRegular,
@@ -190,14 +225,14 @@ fun AnnouncementScreen(id: Int, navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val id = getAnnouncementByIdState.value!!.id
-            val height = if (id == 1) 481 else 280
+            val painter: Painter = rememberAsyncImagePainter(
+                model = getAnnouncementByIdState.payload?.imageAnnouncement.orEmpty()
+            )
 
             Image(
                 modifier = Modifier
-                    .width(340.dp)
-                    .height(height.dp),
-                painter = painterResource(id = getAnnouncementByIdState.value!!.imageAnnouncement),
+                    .width(340.dp),
+                painter = painter,
                 contentDescription = "image description",
             )
         }
